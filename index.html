@@ -1,615 +1,539 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Comprehensive Project Closure</title>
+  <title>Project Closure — Managing IT Projects (Elaine Li, Fall 2025)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --color-bg: #ffffff;
-      --color-surface: #f7f7f7;
-      --color-text: #111111;
-      --color-muted: #666666;
-      --color-border: #e5e7eb;
-      --color-accent: #c9a227; /* gold */
-      --color-accent-2: #b08d1e; /* darker gold */
-      --shadow-1: 0 2px 10px rgba(0,0,0,0.06);
-      --shadow-2: 0 8px 24px rgba(0,0,0,0.10);
-      --radius-xl: 16px;
+      --color-primary: #1e40af;           /* Blue 800 */
+      --color-primary-600: #2563eb;       /* Blue 600 */
+      --color-accent: #3b82f6;            /* Blue 500 */
+      --bg: #f6f7fb;
+      --panel: #ffffff;
+      --text: #0f172a;                    /* Slate 900 */
+      --muted: #475569;                   /* Slate 600 */
+      --border: #cbd5e1;                  /* Slate 300 */
+      --shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+      --chev: #334155;                    /* Slate 700 */
+      --link: #1d4ed8;
+      --table-stripe: #f1f5f9;            /* Slate 100 */
     }
 
     [data-theme="dark"] {
-      --color-bg: #0e0f12; /* near-black */
-      --color-surface: #17181c; /* card */
-      --color-text: #f5f5f5;
-      --color-muted: #b9bcc3;
-      --color-border: #2a2d34;
-      --color-accent: #d3b24a; /* luminous gold for dark */
-      --color-accent-2: #c39d2f;
-      --shadow-1: 0 2px 10px rgba(0,0,0,0.35);
-      --shadow-2: 0 8px 24px rgba(0,0,0,0.5);
+      --bg: #0b1020;
+      --panel: #0f172a;                   /* Slate 900 */
+      --text: #e5e7eb;                    /* Gray 200 */
+      --muted: #94a3b8;                   /* Slate 400 */
+      --border: #1f2937;                  /* Gray 800 */
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.6);
+      --chev: #cbd5e1;                    /* Slate 300 */
+      --table-stripe: #111827;            /* Gray 900 */
+      --link: #60a5fa;                    /* Blue 400 */
     }
 
     * { box-sizing: border-box; }
     html, body { height: 100%; }
-
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: var(--color-bg);
-      color: var(--color-text);
-      line-height: 1.5;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
     }
 
-    .app-shell {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 20px;
-      max-width: 1200px;
-      padding: 24px;
-      margin: 0 auto;
+    .wrapper {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px 80px;
     }
 
-    /* Sidebar */
-    .sidebar {
-      position: sticky;
-      top: 20px;
-      align-self: start;
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-1);
-      padding: 18px;
-    }
-
-    .brand {
+    header.titlebar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 16px;
       margin-bottom: 16px;
-    }
-    .brand h1 {
-      font-size: 18px;
-      font-weight: 700;
-      margin: 0;
-      letter-spacing: 0.2px;
-    }
-
-    .theme-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border: 1px solid var(--color-border);
-      background: transparent;
-      color: var(--color-text);
-      border-radius: 999px;
-      cursor: pointer;
-      transition: transform .15s ease, border-color .2s ease, background .2s ease;
-    }
-    .theme-toggle:hover { transform: translateY(-1px); }
-
-    .toc h2 {
-      margin: 10px 0 8px 0;
-      font-size: 14px;
-      color: var(--color-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .toc ul { list-style: none; padding: 0; margin: 0; }
-    .toc a {
-      display: block;
-      padding: 8px 10px;
-      border-radius: 10px;
-      color: var(--color-text);
-      text-decoration: none;
-      border: 1px solid transparent;
-    }
-    .toc a:hover { border-color: var(--color-border); background: var(--color-bg); }
-    .toc a.active { border-color: var(--color-accent); box-shadow: inset 0 0 0 1px var(--color-accent); }
-
-    /* Main */
-    .main {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-2);
-      padding: 24px;
-    }
-
-    .header {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
     }
 
     .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(180deg, #e2e8f0, #ffffff);
+      border: 1px solid var(--border);
+      color: var(--muted);
       padding: 6px 10px;
       border-radius: 999px;
-      background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
-      color: #111;
-      font-weight: 700;
-      letter-spacing: .3px;
-      border: 1px solid rgba(0,0,0,.06);
+      font-size: 12px; font-weight: 600; letter-spacing: .3px;
+    }
+    [data-theme="dark"] .badge {
+      background: linear-gradient(180deg, #0b1222, #0f172a);
     }
 
-    .student-card, .section-card {
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-1);
-      padding: 16px 18px;
-      margin-bottom: 16px;
+    .toolbar {
+      display: flex; align-items: center; gap: 12px;
     }
 
-    .student-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-    .student-grid label { font-size: 12px; color: var(--color-muted); display:block; margin-bottom:6px; }
-    .student-grid input { width: 100%; padding: 10px 12px; border-radius: 10px; border:1px solid var(--color-border); background: var(--color-surface); color: var(--color-text); }
-
-    /* Collapsible sections */
-    .form-section { border: 1px solid var(--color-border); border-radius: 14px; overflow: hidden; margin: 12px 0; background: var(--color-bg); }
-    .section-header {
-      display:flex; align-items:center; gap:10px; width:100%; text-align:left; background: linear-gradient(180deg, rgba(201,162,39,.12), rgba(201,162,39,0));
-      padding: 14px 16px; cursor:pointer; border:none; color: var(--color-text); font-weight:700; letter-spacing:.2px;
+    .toggle {
+      appearance: none; border: 1px solid var(--border); background: var(--panel);
+      width: 56px; height: 30px; border-radius: 999px; position: relative; cursor: pointer;
+      box-shadow: var(--shadow);
     }
-    .section-header .chev { transition: transform .2s ease; }
-    .form-section.collapsed .section-header .chev { transform: rotate(-90deg); }
-    .section-body { padding: 12px 16px 18px; border-top: 1px dashed var(--color-border); }
+    .toggle::before {
+      content: ""; position: absolute; inset: 3px; width: 24px; height: 24px;
+      background: radial-gradient(circle at 35% 35%, #fde68a 40%, #f59e0b 60%);
+      border-radius: 50%; transition: transform .25s ease;
+    }
+    [data-theme="dark"] .toggle::before {
+      background: radial-gradient(circle at 60% 40%, #93c5fd 20%, #60a5fa 55%, #1e3a8a 90%);
+      transform: translateX(26px);
+    }
 
-    /* Inputs & textareas */
-    .lessons-form input[type="text"], .lessons-form textarea, .lessons-form select {
-      width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--color-border);
-      background: var(--color-surface); color: var(--color-text); font: inherit;
+    .page {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .page__header {
+      display: grid; grid-template-columns: 1fr auto; gap: 16px;
+      padding: 22px 24px; border-bottom: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(30,64,175,0.08), transparent);
+    }
+
+    h1 {
+      font-size: clamp(20px, 3vw, 28px);
+      margin: 0 0 6px 0;
+      letter-spacing: -0.02em;
+    }
+    .subtitle { margin: 0; color: var(--muted); font-weight: 500; }
+
+    .toc {
+      padding: 14px 24px; border-bottom: 1px dashed var(--border);
+      background: linear-gradient(180deg, rgba(30,64,175,0.06), transparent);
+    }
+    .toc h3 { margin: 0 0 8px 0; font-size: 14px; color: var(--muted); text-transform: uppercase; letter-spacing: .12em; }
+    .toc nav { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 6px 14px; }
+    .toc a { text-decoration: none; color: var(--link); font-weight: 600; font-size: 14px; }
+
+    .student-card {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px;
+      padding: 18px 24px; border-bottom: 1px dashed var(--border);
+      align-items: center;
+    }
+    .student-card .field { display: grid; gap: 6px; }
+    .student-card label { font-size: 12px; color: var(--muted); letter-spacing: .04em; text-transform: uppercase; }
+    .student-card input {
+      padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--panel); color: var(--text);
+      outline: none; font: inherit;
+    }
+
+    .content { padding: 8px 8px 24px; }
+
+    /* Collapsibles */
+    .collapsible {
+      border-top: 1px solid var(--border);
+      background: transparent;
+    }
+    .collapsible__summary {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 16px 18px; cursor: pointer; user-select: none;
+      transition: background .2s ease;
+    }
+    .collapsible__summary:hover { background: rgba(148, 163, 184, 0.10); }
+    .collapsible__title { margin: 0; font-size: 18px; letter-spacing: -0.01em; }
+    .chevron { width: 18px; height: 18px; flex: 0 0 18px; color: var(--chev); transition: transform .2s ease; }
+    .collapsible[open] .chevron { transform: rotate(90deg); }
+
+    .collapsible__body { padding: 0 18px 18px; }
+
+    /* Form and tables inside given content */
+    .lessons-form label { display: inline-block; margin: 6px 0 6px; font-weight: 600; color: var(--muted); }
+    .lessons-form input[type="text"],
+    .lessons-form textarea,
+    .lessons-form select {
+      width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
+      background: var(--panel); color: var(--text); outline: none; font: inherit;
     }
     .lessons-form textarea { resize: vertical; }
 
-    /* Tables */
-    .lessons-form table { width: 100%; border-collapse: collapse; background: var(--color-bg); box-shadow: var(--shadow-1); }
-    .lessons-form thead { background: var(--color-accent) !important; color: #111 !important; }
-    .lessons-form th, .lessons-form td { padding: 12px; text-align: left; border: 1px solid var(--color-border) !important; }
-    .lessons-form tbody tr:nth-child(2n) { background: color-mix(in oklab, var(--color-surface) 80%, #000 0%); }
+    /* Override inline table header color to blue/grey palette */
+    .lessons-form table thead { background: var(--color-primary) !important; color: #fff !important; }
+    .lessons-form table { border-collapse: collapse; width: 100%; background: var(--panel); box-shadow: var(--shadow); }
+    .lessons-form table tbody tr:nth-child(even) { background: var(--table-stripe) !important; }
+    .lessons-form table th, .lessons-form table td { border: 1px solid var(--border) !important; }
 
-    /* Controls row */
-    .controls { display:flex; gap: 10px; flex-wrap: wrap; align-items:center; margin: 12px 0 20px; }
-    .btn {
-      padding: 10px 14px; border-radius: 10px; border:1px solid var(--color-border); background: var(--color-bg); color: var(--color-text); cursor:pointer;
-    }
-    .btn.primary { background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2)); color:#111; border-color: rgba(0,0,0,.1); font-weight:700; }
-    .btn:hover { filter: brightness(1.02); }
+    /* Tag / pill */
+    .pill { display: inline-flex; gap: 8px; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(37, 99, 235, 0.12); color: var(--color-primary-600); font-weight: 600; font-size: 12px; }
 
-    /* Small screen */
-    @media (max-width: 900px) {
-      .app-shell { grid-template-columns: 1fr; }
-      .sidebar { position: static; }
-    }
+    /* Footer */
+    footer { text-align: center; color: var(--muted); font-size: 12px; padding: 16px; }
+
+    /* Accessibility focus */
+    a:focus, button:focus, .collapsible__summary:focus { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 8px; }
+
   </style>
 </head>
 <body>
-  <div class="app-shell" id="app">
-    <!-- Sidebar / TOC -->
-    <aside class="sidebar" aria-label="Table of contents">
-      <div class="brand">
-        <h1>Project Closure</h1>
-        <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false" title="Toggle light/dark">
-          <span aria-hidden="true">🌓</span>
-          <span class="label">Light</span>
-        </button>
+  <div class="wrapper">
+    <header class="titlebar">
+      <span class="badge">Project Closure Page</span>
+      <div class="toolbar">
+        <span class="pill" title="Theme">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          Light/Dark
+        </span>
+        <button id="themeToggle" class="toggle" aria-label="Toggle light and dark mode"></button>
       </div>
-      <div class="toc">
-        <h2>Contents</h2>
-        <ul id="tocList"></ul>
-      </div>
-    </aside>
+    </header>
 
-    <!-- Main content -->
-    <main class="main">
-      <div class="header">
-        <span class="badge">Gold • Black • Grey • White</span>
-        <div class="controls">
-          <button class="btn" id="expandAll" type="button">Expand All</button>
-          <button class="btn" id="collapseAll" type="button">Collapse All</button>
+    <div class="page">
+      <div class="page__header">
+        <div>
+          <h1>Comprehensive Project Closure</h1>
+          <p class="subtitle">Managing IT Projects — Fall 2025</p>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <a class="pill" href="#toc">Jump to Contents</a>
         </div>
       </div>
 
-      <!-- Student information card -->
-      <section class="student-card" id="student-info">
-        <h2 style="margin:0 0 10px 0">Student Information</h2>
-        <div class="student-grid">
-          <div>
-            <label for="studentName">Student Name</label>
-            <input id="studentName" type="text" placeholder="e.g., Jordan Quinn" />
-          </div>
-          <div>
-            <label for="studentEmail">Email</label>
-            <input id="studentEmail" type="text" placeholder="name@university.edu" />
-          </div>
-          <div>
-            <label for="course">Course / Section</label>
-            <input id="course" type="text" placeholder="PMGT 301 - Section A" />
-          </div>
-          <div>
-            <label for="semester">Semester</label>
-            <input id="semester" type="text" placeholder="Fall 2025" />
-          </div>
-          <div>
-            <label for="instructor">Instructor</label>
-            <input id="instructor" type="text" placeholder="Dr. Rivera" />
-          </div>
-          <div>
-            <label for="date">Submission Date</label>
-            <input id="date" type="text" placeholder="mm/dd/yyyy" />
-          </div>
+      <!-- Student Information Section -->
+      <section class="student-card" aria-labelledby="student-info">
+        <h2 id="student-info" class="sr-only" style="position:absolute;left:-10000px;">Student Information</h2>
+        <div class="field">
+          <label>Student Name</label>
+          <input type="text" id="studentName" value="Elaine Li" />
+        </div>
+        <div class="field">
+          <label>Course</label>
+          <input type="text" id="course" value="Managing IT Projects" />
+        </div>
+        <div class="field">
+          <label>Semester</label>
+          <input type="text" id="semester" value="Fall 2025" />
         </div>
       </section>
 
-      <!-- Collapsible container that houses the provided markup -->
-      <section class="section-card lessons-form" id="project-closure">
-        <h2 style="margin-top:0">Comprehensive Project Closure Document</h2>
+      <!-- Table of Contents -->
+      <div class="toc" id="toc">
+        <h3>Table of Contents</h3>
+        <nav id="tocList" aria-label="Section list">
+          <!-- Auto generated -->
+        </nav>
+      </div>
 
-        <!-- The requested HTML snippet is embedded below, lightly adapted to work with collapsible sections -->
+      <div class="content">
+
+        <!-- COLLAPSIBLE SECTIONS WILL WRAP AROUND THE GIVEN CONTENT BELOW -->
+
         <div id="lessons" class="tab-content active">
+          <!-- Comprehensive Closure Document Form -->
           <div class="lessons-form">
+            <h3>Comprehensive Project Closure Document</h3>
 
-            <!-- 1. Project Information -->
-            <div class="form-section" data-section-title="1. Project Information">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>1. Project Information</span>
-              </button>
-              <div class="section-body">
-                <label class="custom-cursor-default-hover">Project Title:</label>
-                <input type="text" placeholder="e.g., Get an Entry-Level Job in Data Analytics">
-                <br><br>
-                <label class="custom-cursor-default-hover">Project Manager:</label>
-                <input type="text" placeholder="Your name">
-                <br><br>
-                <label class="custom-cursor-default-hover">Project Description:</label>
-                <textarea rows="4" placeholder="Brief overview of your semester project - what problem does it solve, who are the users, and what are the main features or deliverables?"></textarea>
-                <br><br>
-                <label class="custom-cursor-default-hover">Project Closure Type:</label>
-                <select>
-                  <option value="">Select closure type...</option>
-                  <option value="normal">✅ Normal Closure - Project completed successfully</option>
-                  <option value="premature">⚠️ Premature Closure - Ended early, core objectives met</option>
-                  <option value="perpetual">🔄 Perpetual Closure - No official end, ongoing</option>
-                  <option value="failed">❌ Failed / Unsuccessful Closure - Terminated due to issues</option>
-                  <option value="changed">🔀 Changed Priority Closure - Stopped due to strategy shift</option>
-                </select>
-                <br><br>
-                <label class="custom-cursor-default-hover">Closing Summary:</label>
-                <textarea rows="4" placeholder="Executive summary of overall project performance - Did you meet your goals? What were the key successes and challenges? How would you rate the project's overall success?"></textarea>
+            <div class="form-section">
+              <h4>1. Project Information</h4>
+              <label class="custom-cursor-default-hover">Project Title:</label>
+              <input type="text" placeholder="e.g., Get an Entry-Level Job in Data Analytics">
+              <br><br>
+              <label class="custom-cursor-default-hover">Project Manager:</label>
+              <input type="text" placeholder="Your name">
+              <br><br>
+              <label class="custom-cursor-default-hover">Project Description:</label>
+              <textarea rows="4" placeholder="Brief overview of your semester project - what problem does it solve, who are the users, and what are the main features or deliverables?"></textarea>
+              <br><br>
+              <label class="custom-cursor-default-hover">Project Closure Type:</label>
+              <select style="width: 100%; padding: 12px 15px; border: 2px solid #e9ecef; border-radius: 8px; font-family: inherit; font-size: 15px; transition: border-color 0.3s ease;">
+                <option value="">Select closure type...</option>
+                <option value="normal">✅ Normal Closure - Project completed successfully</option>
+                <option value="premature">⚠️ Premature Closure - Ended early, core objectives met</option>
+                <option value="perpetual">🔄 Perpetual Closure - No official end, ongoing</option>
+                <option value="failed">❌ Failed / Unsuccessful Closure - Terminated due to issues</option>
+                <option value="changed">🔀 Changed Priority Closure - Stopped due to strategy shift</option>
+              </select>
+              <br><br>
+              <label class="custom-cursor-default-hover">Closing Summary:</label>
+              <textarea rows="4" placeholder="Executive summary of overall project performance - Did you meet your goals? What were the key successes and challenges? How would you rate the project's overall success?"></textarea>
+            </div>
+
+            <div class="form-section">
+              <h4>2. Deliverables Summary</h4>
+              <p style="color: #666; margin-bottom: 15px;">
+                List all major deliverables and track their completion status.
+              </p>
+
+              <div style="overflow-x: auto; margin-top: 20px;">
+                <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                  <thead style="background: #c0392b; color: white;">
+                    <tr>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 40%;">Deliverable Name</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 30%;">Original Definition of Done</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 20%;">Actual Progress</th>
+                      <th style="padding: 12px; text-align: center; border: 1px solid #ddd; width: 10%;">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="e.g., Project Charter, User Research Report"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="e.g., Complete charter with all sections, 10+ user interviews"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="e.g., Charter completed, 12 interviews conducted"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                        <select style="width: 100%; border: none; font-size: 14px; padding: 5px; background: white;">
+                          <option value="">-</option>
+                          <option value="green" style="background: #d4edda; color: #155724;">🟢 Green</option>
+                          <option value="yellow" style="background: #fff3cd; color: #856404;">🟡 Yellow</option>
+                          <option value="red" style="background: #f8d7da; color: #721c24;">🔴 Red</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Deliverable 2"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Original criteria"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="What was delivered"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                        <select style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;">
+                          <option value="">-</option>
+                          <option value="green">🟢 Green</option>
+                          <option value="yellow">🟡 Yellow</option>
+                          <option value="red">🔴 Red</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Deliverable 3"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Original criteria"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="What was delivered"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                        <select style="width: 100%; border: none; font-size: 14px; padding: 5px; background: white;">
+                          <option value="">-</option>
+                          <option value="green">🟢 Green</option>
+                          <option value="yellow">🟡 Yellow</option>
+                          <option value="red">🔴 Red</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Deliverable 4"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Original criteria"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="What was delivered"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                        <select style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;">
+                          <option value="">-</option>
+                          <option value="green">🟢 Green</option>
+                          <option value="yellow">🟡 Yellow</option>
+                          <option value="red">🔴 Red</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Deliverable 5"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Original criteria"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="What was delivered"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                        <select style="width: 100%; border: none; font-size: 14px; padding: 5px; background: white;">
+                          <option value="">-</option>
+                          <option value="green">🟢 Green</option>
+                          <option value="yellow">🟡 Yellow</option>
+                          <option value="red">🔴 Red</option>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Deliverable 6"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Original criteria"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="What was delivered"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                        <select style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;">
+                          <option value="">-</option>
+                          <option value="green">🟢 Green</option>
+                          <option value="yellow">🟡 Yellow</option>
+                          <option value="red">🔴 Red</option>
+                        </select>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            <!-- 2. Deliverables Summary -->
-            <div class="form-section" data-section-title="2. Deliverables Summary">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>2. Deliverables Summary</span>
-              </button>
-              <div class="section-body">
-                <p style="color: var(--color-muted); margin-bottom: 15px;">List all major deliverables and track their completion status.</p>
-                <div style="overflow-x: auto; margin-top: 20px;">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th style="width: 40%;">Deliverable Name</th>
-                        <th style="width: 30%;">Original Definition of Done</th>
-                        <th style="width: 20%;">Actual Progress</th>
-                        <th style="width: 10%; text-align:center;">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><input type="text" placeholder="e.g., Project Charter, User Research Report"></td>
-                        <td><input type="text" placeholder="e.g., Complete charter with all sections, 10+ user interviews"></td>
-                        <td><input type="text" placeholder="e.g., Charter completed, 12 interviews conducted"></td>
-                        <td style="text-align:center;">
-                          <select>
-                            <option value="">-</option>
-                            <option value="green">🟢 Green</option>
-                            <option value="yellow">🟡 Yellow</option>
-                            <option value="red">🔴 Red</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="Deliverable 2"></td>
-                        <td><input type="text" placeholder="Original criteria"></td>
-                        <td><input type="text" placeholder="What was delivered"></td>
-                        <td style="text-align:center;">
-                          <select>
-                            <option value="">-</option>
-                            <option value="green">🟢 Green</option>
-                            <option value="yellow">🟡 Yellow</option>
-                            <option value="red">🔴 Red</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="Deliverable 3"></td>
-                        <td><input type="text" placeholder="Original criteria"></td>
-                        <td><input type="text" placeholder="What was delivered"></td>
-                        <td style="text-align:center;">
-                          <select>
-                            <option value="">-</option>
-                            <option value="green">🟢 Green</option>
-                            <option value="yellow">🟡 Yellow</option>
-                            <option value="red">🔴 Red</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="Deliverable 4"></td>
-                        <td><input type="text" placeholder="Original criteria"></td>
-                        <td><input type="text" placeholder="What was delivered"></td>
-                        <td style="text-align:center;">
-                          <select>
-                            <option value="">-</option>
-                            <option value="green">🟢 Green</option>
-                            <option value="yellow">🟡 Yellow</option>
-                            <option value="red">🔴 Red</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="Deliverable 5"></td>
-                        <td><input type="text" placeholder="Original criteria"></td>
-                        <td><input type="text" placeholder="What was delivered"></td>
-                        <td style="text-align:center;">
-                          <select>
-                            <option value="">-</option>
-                            <option value="green">🟢 Green</option>
-                            <option value="yellow">🟡 Yellow</option>
-                            <option value="red">🔴 Red</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="Deliverable 6"></td>
-                        <td><input type="text" placeholder="Original criteria"></td>
-                        <td><input type="text" placeholder="What was delivered"></td>
-                        <td style="text-align:center;">
-                          <select>
-                            <option value="">-</option>
-                            <option value="green">🟢 Green</option>
-                            <option value="yellow">🟡 Yellow</option>
-                            <option value="red">🔴 Red</option>
-                          </select>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+            <div class="form-section">
+              <h4>3. Change Log</h4>
+              <p style="color: #666; margin-bottom: 15px;">Summary of all scope changes made during the project.</p>
+
+              <div style="overflow-x: auto; margin-top: 20px;">
+                <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                  <thead style="background: #c0392b; color: white;">
+                    <tr>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 10%;">Change No</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 15%;">Change Date</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 40%;">Change</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 35%;">Reason for Change</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="1"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="mm/dd/yy"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Describe the change"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Why was this change needed?"></td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="2"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="mm/dd/yy"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Describe the change"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Why was this change needed?"></td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="3"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="mm/dd/yy"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Describe the change"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Why was this change needed?"></td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="4"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="mm/dd/yy"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Describe the change"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px; background: transparent;" placeholder="Why was this change needed?"></td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="5"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="mm/dd/yy"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Describe the change"></td>
+                      <td style="padding: 10px; border: 1px solid #ddd;"><input type="text" style="width: 100%; border: none; font-size: 14px; padding: 5px;" placeholder="Why was this change needed?"></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            <!-- 3. Change Log -->
-            <div class="form-section" data-section-title="3. Change Log">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>3. Change Log</span>
-              </button>
-              <div class="section-body">
-                <p style="color: var(--color-muted); margin-bottom: 15px;">Summary of all scope changes made during the project.</p>
-                <div style="overflow-x: auto; margin-top: 20px;">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th style="width:10%;">Change No</th>
-                        <th style="width:15%;">Change Date</th>
-                        <th style="width:40%;">Change</th>
-                        <th style="width:35%;">Reason for Change</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><input type="text" placeholder="1"></td>
-                        <td><input type="text" placeholder="mm/dd/yy"></td>
-                        <td><input type="text" placeholder="Describe the change"></td>
-                        <td><input type="text" placeholder="Why was this change needed?"></td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="2"></td>
-                        <td><input type="text" placeholder="mm/dd/yy"></td>
-                        <td><input type="text" placeholder="Describe the change"></td>
-                        <td><input type="text" placeholder="Why was this change needed?"></td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="3"></td>
-                        <td><input type="text" placeholder="mm/dd/yy"></td>
-                        <td><input type="text" placeholder="Describe the change"></td>
-                        <td><input type="text" placeholder="Why was this change needed?"></td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="4"></td>
-                        <td><input type="text" placeholder="mm/dd/yy"></td>
-                        <td><input type="text" placeholder="Describe the change"></td>
-                        <td><input type="text" placeholder="Why was this change needed?"></td>
-                      </tr>
-                      <tr>
-                        <td><input type="text" placeholder="5"></td>
-                        <td><input type="text" placeholder="mm/dd/yy"></td>
-                        <td><input type="text" placeholder="Describe the change"></td>
-                        <td><input type="text" placeholder="Why was this change needed?"></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+            <div class="form-section">
+              <h4>4. Performance Analysis</h4>
+
+              <h5 style="color: var(--color-primary); margin: 20px 0 10px 0;">4.1 Budget Performance</h5>
+              <textarea rows="4" placeholder="If applicable: Did you stay within budget constraints? Any unexpected costs for tools, hosting, or resources?"></textarea>
+
+              <h5 style="color: var(--color-primary); margin: 20px 0 10px 0;">4.2 Schedule Performance</h5>
+              <textarea rows="4" placeholder="Did you meet your semester milestones? What caused delays? Were your time estimates realistic for this project?"></textarea>
             </div>
 
-            <!-- 4. Performance Analysis -->
-            <div class="form-section" data-section-title="4. Performance Analysis">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>4. Performance Analysis</span>
-              </button>
-              <div class="section-body">
-                <h5 style="color: var(--color-accent); margin: 10px 0;">4.1 Budget Performance</h5>
-                <textarea rows="4" placeholder="If applicable: Did you stay within budget constraints? Any unexpected costs for tools, hosting, or resources?"></textarea>
-                <h5 style="color: var(--color-accent); margin: 20px 0 10px 0;">4.2 Schedule Performance</h5>
-                <textarea rows="4" placeholder="Did you meet your semester milestones? What caused delays? Were your time estimates realistic for this project?"></textarea>
-              </div>
+            <div class="form-section">
+              <h4>5. Stakeholder Management</h4>
+              <textarea rows="5" placeholder="How did you engage with potential users, the instructor, or other stakeholders? What feedback was most valuable? How effective was your communication strategy?"></textarea>
             </div>
 
-            <!-- 5. Stakeholder Management -->
-            <div class="form-section" data-section-title="5. Stakeholder Management">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>5. Stakeholder Management</span>
-              </button>
-              <div class="section-body">
-                <textarea rows="5" placeholder="How did you engage with potential users, the instructor, or other stakeholders? What feedback was most valuable? How effective was your communication strategy?"></textarea>
-              </div>
-            </div>
-
-            <!-- 6. Risk and Issue Summary -->
-            <div class="form-section" data-section-title="6. Risk and Issue Summary">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>6. Risk and Issue Summary</span>
-              </button>
-              <div class="section-body">
-                <p style="color: var(--color-muted); margin-bottom: 15px;">Major risks that occurred, how they were handled, and any outstanding risks for operations.</p>
-                <textarea rows="6" placeholder="Document the key risks and issues that materialized during your project:
+            <div class="form-section">
+              <h4>6. Risk and Issue Summary</h4>
+              <p style="color: #666; margin-bottom: 15px;">Major risks that occurred, how they were handled, and any outstanding risks for operations.</p>
+              <textarea rows="6" placeholder="Document the key risks and issues that materialized during your project:
 • What risks from your risk register actually happened?
 • What unexpected issues came up?
 • How did you handle them?
 • Are there any outstanding risks or issues that need to be monitored going forward?"></textarea>
-              </div>
             </div>
 
-            <!-- 7. What Went Well? -->
-            <div class="form-section" data-section-title="7. What Went Well?">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>7. What Went Well?</span>
-              </button>
-              <div class="section-body">
-                <label>Successes and Best Practices:</label>
-                <textarea rows="6" placeholder="What worked exceptionally well? What practices should be repeated in future projects?
+            <div class="form-section">
+              <h4>7. What Went Well?</h4>
+              <label>Successes and Best Practices:</label>
+              <textarea rows="6" placeholder="What worked exceptionally well? What practices should be repeated in future projects?
 
 Examples:
 • Weekly team check-ins kept everyone on track and motivated
 • Using a shared project management tool (Trello/Asana) improved visibility
 • Breaking the project into sprints helped manage the workload across the semester
 • Getting early feedback from potential users shaped better features"></textarea>
-              </div>
             </div>
 
-            <!-- 8. What Didn't Go Well? -->
-            <div class="form-section" data-section-title="8. What Didn't Go Well?">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>8. What Didn't Go Well?</span>
-              </button>
-              <div class="section-body">
-                <label class="custom-cursor-default-hover">Challenges and Problems:</label>
-                <textarea rows="6" placeholder="What caused difficulties? What should be avoided or improved?
+            <div class="form-section">
+              <h4>8. What Didn't Go Well?</h4>
+              <label class="custom-cursor-default-hover">Challenges and Problems:</label>
+              <textarea rows="6" placeholder="What caused difficulties? What should be avoided or improved?
 
 Examples:
 • Balancing coursework with project deadlines created time pressure
 • Initial scope was too ambitious for the semester timeline
 • Team members had conflicting schedules for meetings
 • Underestimated the time needed for documentation and testing"></textarea>
-              </div>
             </div>
 
-            <!-- 9. What Would You Do Differently? -->
-            <div class="form-section" data-section-title="9. What Would You Do Differently?">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>9. What Would You Do Differently?</span>
-              </button>
-              <div class="section-body">
-                <label class="custom-cursor-default-hover">Improvements and Recommendations:</label>
-                <textarea rows="6" placeholder="If starting over, what would you change? What concrete recommendations do you have?
+            <div class="form-section">
+              <h4>9. What Would You Do Differently?</h4>
+              <label class="custom-cursor-default-hover">Improvements and Recommendations:</label>
+              <textarea rows="6" placeholder="If starting over, what would you change? What concrete recommendations do you have?
 
 Examples:
 • Start with a smaller MVP and add features incrementally
 • Set clearer team expectations and meeting schedules in week 1
 • Create a realistic timeline with buffer time for unexpected issues
 • Document decisions and rationale as we go instead of at the end"></textarea>
+            </div>
+
+            <div class="form-section">
+              <h4>10. Lessons Learned Register</h4>
+              <p style="color: #666; margin-bottom: 15px;">
+                Document at least five lessons learned throughout your project lifecycle. Use the table format below to capture each lesson.
+              </p>
+
+              <div style="overflow-x: auto; margin-top: 20px;">
+                <table style="width: 100%; border-collapse: collapse; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                  <thead style="background: #c0392b; color: white;">
+                    <tr>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 10%;">Date</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 15%;">SDLC Stage</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 25%;">What was the problem?</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 25%;">What was the consequence?</th>
+                      <th style="padding: 12px; text-align: left; border: 1px solid #ddd; width: 25%;">Lesson Learned Advice</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">mm/dd/yy</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Initiation / Planning / Execution / Monitoring / Closing</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Describe the problem or challenge encountered</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">What happened as a result?</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">What advice would you give to avoid or handle this in the future?</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">mm/dd/yy</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">SDLC Stage</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Problem description</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Consequence</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Advice nugget</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">mm/dd/yy</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">SDLC Stage</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Problem description</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Consequence</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Advice nugget</td>
+                    </tr>
+                    <tr style="background: #f8f9fa;">
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">mm/dd/yy</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">SDLC Stage</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Problem description</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Consequence</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Advice nugget</td>
+                    </tr>
+                    <tr>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">mm/dd/yy</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">SDLC Stage</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Problem description</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Consequence</td>
+                      <td style="padding: 10px; border: 1px solid #ddd; color: #666; font-size: 14px;">Advice nugget</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
 
-            <!-- 10. Lessons Learned Register -->
-            <div class="form-section" data-section-title="10. Lessons Learned Register">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>10. Lessons Learned Register</span>
-              </button>
-              <div class="section-body">
-                <p style="color: var(--color-muted); margin-bottom: 15px;">Document at least five lessons learned throughout your project lifecycle. Use the table format below to capture each lesson.</p>
-                <div style="overflow-x: auto; margin-top: 20px;">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th style="width:10%;">Date</th>
-                        <th style="width:15%;">SDLC Stage</th>
-                        <th style="width:25%;">What was the problem?</th>
-                        <th style="width:25%;">What was the consequence?</th>
-                        <th style="width:25%;">Lesson Learned Advice</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td style="color: var(--color-muted);">mm/dd/yy</td>
-                        <td style="color: var(--color-muted);">Initiation / Planning / Execution / Monitoring / Closing</td>
-                        <td style="color: var(--color-muted);">Describe the problem or challenge encountered</td>
-                        <td style="color: var(--color-muted);">What happened as a result?</td>
-                        <td style="color: var(--color-muted);">What advice would you give to avoid or handle this in the future?</td>
-                      </tr>
-                      <tr>
-                        <td style="color: var(--color-muted);">mm/dd/yy</td>
-                        <td style="color: var(--color-muted);">SDLC Stage</td>
-                        <td style="color: var(--color-muted);">Problem description</td>
-                        <td style="color: var(--color-muted);">Consequence</td>
-                        <td style="color: var(--color-muted);">Advice nugget</td>
-                      </tr>
-                      <tr>
-                        <td style="color: var(--color-muted);">mm/dd/yy</td>
-                        <td style="color: var(--color-muted);">SDLC Stage</td>
-                        <td style="color: var(--color-muted);">Problem description</td>
-                        <td style="color: var(--color-muted);">Consequence</td>
-                        <td style="color: var(--color-muted);">Advice nugget</td>
-                      </tr>
-                      <tr>
-                        <td style="color: var(--color-muted);">mm/dd/yy</td>
-                        <td style="color: var(--color-muted);">SDLC Stage</td>
-                        <td style="color: var(--color-muted);">Problem description</td>
-                        <td style="color: var(--color-muted);">Consequence</td>
-                        <td style="color: var(--color-muted);">Advice nugget</td>
-                      </tr>
-                      <tr>
-                        <td style="color: var(--color-muted);">mm/dd/yy</td>
-                        <td style="color: var(--color-muted);">SDLC Stage</td>
-                        <td style="color: var(--color-muted);">Problem description</td>
-                        <td style="color: var(--color-muted);">Consequence</td>
-                        <td style="color: var(--color-muted);">Advice nugget</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-
-            <!-- 11. Key Takeaways for Future Projects -->
-            <div class="form-section" data-section-title="11. Key Takeaways for Future Projects">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>11. Key Takeaways for Future Projects</span>
-              </button>
-              <div class="section-body">
-                <label class="custom-cursor-default-hover">Top 3-5 Actionable Insights:</label>
-                <textarea rows="5" placeholder="What are the most important lessons you learned that you'd apply to your next project?
+            <div class="form-section">
+              <h4>11. Key Takeaways for Future Projects</h4>
+              <label class="custom-cursor-default-hover">Top 3-5 Actionable Insights:</label>
+              <textarea rows="5" placeholder="What are the most important lessons you learned that you'd apply to your next project?
 
 Be specific and actionable:
 1. Start with a realistic scope—our initial plan was too ambitious for one semester
@@ -617,18 +541,12 @@ Be specific and actionable:
 3. Build in buffer time for learning new tools and technologies
 4. Get user feedback early and often, not just at the end
 5. Document major decisions when they happen—it's harder to remember the 'why' later"></textarea>
-              </div>
             </div>
 
-            <!-- 12. Formal Sign-Off -->
-            <div class="form-section" data-section-title="12. Formal Sign-Off">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>12. Formal Sign-Off</span>
-              </button>
-              <div class="section-body">
-                <label>Get feedback and sign-off from stakeholders confirming project completion and their satisfaction with the outcome.</label>
-                <textarea rows="6" placeholder="Document stakeholder feedback and approval:
+            <div class="form-section">
+              <h4>12. Formal Sign-Off</h4>
+              <label>Get feedback and sign-off from stakeholders confirming project completion and their satisfaction with the outcome.</label>
+              <textarea rows="6" placeholder="Document stakeholder feedback and approval:
 • Your name and signature as PM
 • Team members who approve the final deliverables
 • Stakeholder feedback: Were they happy with the outcome? What were their impressions?
@@ -636,145 +554,131 @@ Be specific and actionable:
 • Instructor/course approval (if applicable)
 
 Example: 'Spoke with [Stakeholder Name] on [Date] - they were pleased with [specific outcome] and confirmed the project met their expectations. They signed off on [Date].'"></textarea>
-              </div>
             </div>
 
-            <!-- 13. Recognition -->
-            <div class="form-section" data-section-title="13. Recognition">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>13. Recognition</span>
-              </button>
-              <div class="section-body">
-                <label>Acknowledgment of team members' contributions and key stakeholder support.</label>
-                <textarea rows="5" placeholder="Thank the people who helped make your project successful:
+            <div class="form-section">
+              <h4>13. Recognition</h4>
+              <label>Acknowledgment of team members' contributions and key stakeholder support.</label>
+              <textarea rows="5" placeholder="Thank the people who helped make your project successful:
 • Team members and their specific contributions
 • People you interviewed or who provided feedback
 • Classmates who offered advice or support"></textarea>
-              </div>
             </div>
 
-            <!-- 14. What's Next -->
-            <div class="form-section" data-section-title="14. What's Next">
-              <button class="section-header" type="button">
-                <span class="chev">▾</span>
-                <span>14. What's Next</span>
-              </button>
-              <div class="section-body">
-                <label>Future plans, next steps, and how you'll apply what you learned.</label>
-                <textarea rows="5" placeholder="What are your next steps after this project?
+            <div class="form-section">
+              <h4>14. What's Next</h4>
+              <label>Future plans, next steps, and how you'll apply what you learned.</label>
+              <textarea rows="5" placeholder="What are your next steps after this project?
 • How will you apply the lessons learned to your next project or career?
 • Are there any follow-up actions or future enhancements planned?
 • What skills or knowledge do you want to develop further?
 • How has this project changed your approach to project management?"></textarea>
-              </div>
             </div>
-
           </div>
         </div>
-      </section>
-    </main>
+      </div>
+
+      <footer>
+        Designed with a blue & grey professional theme • Light/Dark preserved locally • Collapsible sections with arrow indicators
+      </footer>
+    </div>
   </div>
 
   <script>
-    (function themeInit(){
-      const root = document.documentElement;
-      const saved = localStorage.getItem('pc_theme');
-      if (saved === 'dark' || (!saved && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        root.setAttribute('data-theme','dark');
-      }
-      updateToggleLabel();
-    })();
+    // ===== Theme toggle with persistence =====
+    const root = document.documentElement;
+    const savedTheme = localStorage.getItem('pc-theme');
+    if (savedTheme === 'dark') {
+      root.setAttribute('data-theme', 'dark');
+    }
+    const toggle = document.getElementById('themeToggle');
+    toggle.addEventListener('click', () => {
+      const now = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', now);
+      localStorage.setItem('pc-theme', now);
+    });
 
-    function updateToggleLabel(){
-      const btn = document.getElementById('themeToggle');
-      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      btn.setAttribute('aria-pressed', String(isDark));
-      btn.querySelector('.label').textContent = isDark ? 'Dark' : 'Light';
+    // ===== Make sections collapsible and build TOC =====
+    const lessonsForm = document.querySelector('.lessons-form');
+
+    function slugify(str) {
+      return str.toLowerCase().replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-');
     }
 
-    document.getElementById('themeToggle').addEventListener('click', () => {
-      const root = document.documentElement;
-      const isDark = root.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        root.removeAttribute('data-theme');
-        localStorage.setItem('pc_theme','light');
-      } else {
-        root.setAttribute('data-theme','dark');
-        localStorage.setItem('pc_theme','dark');
+    const tocList = document.getElementById('tocList');
+
+    Array.from(lessonsForm.querySelectorAll('.form-section')).forEach((section, idx) => {
+      const h4 = section.querySelector('h4');
+      if (!h4) return;
+      const id = slugify(h4.textContent);
+      h4.id = id;
+
+      // Build TOC link
+      const a = document.createElement('a');
+      a.href = `#${id}`;
+      a.textContent = h4.textContent;
+      tocList.appendChild(a);
+
+      // Wrap content into <details> for native collapse behavior
+      const details = document.createElement('details');
+      details.className = 'collapsible';
+      if (idx === 0) details.setAttribute('open', '');
+
+      const summary = document.createElement('summary');
+      summary.className = 'collapsible__summary';
+
+      const title = document.createElement('span');
+      title.className = 'collapsible__title';
+      title.textContent = h4.textContent;
+
+      // Chevron icon
+      const chev = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      chev.setAttribute('class', 'chevron');
+      chev.setAttribute('viewBox', '0 0 24 24');
+      chev.setAttribute('fill', 'none');
+      chev.setAttribute('stroke', 'currentColor');
+      chev.setAttribute('stroke-width', '2');
+      chev.setAttribute('stroke-linecap', 'round');
+      chev.setAttribute('stroke-linejoin', 'round');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M9 18l6-6-6-6');
+      chev.appendChild(path);
+
+      summary.appendChild(title);
+      summary.appendChild(chev);
+
+      const body = document.createElement('div');
+      body.className = 'collapsible__body';
+
+      // Move siblings after h4 into the body
+      let el = h4.nextSibling;
+      while (el) {
+        const next = el.nextSibling;
+        body.appendChild(el);
+        el = next;
       }
-      updateToggleLabel();
+
+      details.appendChild(summary);
+      details.appendChild(body);
+      section.appendChild(details);
+      h4.remove(); // we duplicated as header in summary
     });
 
-    // Collapsible logic
-    document.querySelectorAll('.form-section').forEach((sec, idx) => {
-      const btn = sec.querySelector('.section-header');
-      const body = sec.querySelector('.section-body');
-      // Expanded by default for first two; collapsed for others
-      const expanded = idx < 2;
-      if (!expanded) { sec.classList.add('collapsed'); body.style.display = 'none'; }
-
-      btn.addEventListener('click', () => {
-        const hidden = body.style.display === 'none';
-        body.style.display = hidden ? 'block' : 'none';
-        sec.classList.toggle('collapsed', !hidden);
+    // Optional: smooth scroll for TOC links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
 
-    // Expand / Collapse all
-    const allSections = () => Array.from(document.querySelectorAll('.form-section'));
-    document.getElementById('expandAll').addEventListener('click', () => {
-      allSections().forEach(sec => { sec.classList.remove('collapsed'); sec.querySelector('.section-body').style.display = 'block'; });
-    });
-    document.getElementById('collapseAll').addEventListener('click', () => {
-      allSections().forEach(sec => { sec.classList.add('collapsed'); sec.querySelector('.section-body').style.display = 'none'; });
-    });
-
-    // Build Table of Contents from sections
-    (function buildTOC(){
-      const toc = document.getElementById('tocList');
-      const sections = document.querySelectorAll('.form-section');
-      sections.forEach((sec, i) => {
-        const title = sec.getAttribute('data-section-title') || `Section ${i+1}`;
-        const anchorId = `sec-${i+1}-${title.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`;
-        sec.id = anchorId;
-        const li = document.createElement('li');
-        const a = document.createElement('a');
-        a.href = `#${anchorId}`;
-        a.textContent = title;
-        li.appendChild(a);
-        toc.appendChild(li);
-      });
-
-      // Basic scrollspy highlight
-      const links = toc.querySelectorAll('a');
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          const id = e.target.getAttribute('id');
-          const link = Array.from(links).find(l => l.getAttribute('href') === `#${id}`);
-          if (link) {
-            if (e.isIntersecting) link.classList.add('active'); else link.classList.remove('active');
-          }
-        });
-      }, { rootMargin: '-40% 0px -55% 0px', threshold: 0.01 });
-      document.querySelectorAll('.form-section').forEach(s => obs.observe(s));
-    })();
-
-    // Keyboard accessibility: jump between sections with Alt+ArrowUp/Down
-    document.addEventListener('keydown', (e) => {
-      if (!e.altKey) return;
-      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
-      const secs = Array.from(document.querySelectorAll('.form-section'));
-      const y = window.scrollY;
-      const idx = secs.findIndex(s => s.getBoundingClientRect().top + window.scrollY - 20 > y) - 1;
-      let targetIdx = 0;
-      if (e.key === 'ArrowDown') targetIdx = Math.min((idx < 0 ? 0 : idx) + 1, secs.length - 1);
-      if (e.key === 'ArrowUp') targetIdx = Math.max((idx < 0 ? 0 : idx) - 1, 0);
-      secs[targetIdx].scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
   </script>
 </body>
 </html>
+
 
 
 
