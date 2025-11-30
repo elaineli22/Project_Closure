@@ -809,6 +809,41 @@ body.dark, :root.dark {
 /* Make anchor jumps land below sticky headers */
 .star-section h3[id] { scroll-margin-top: 90px; }
 
+
+:root {
+  --star-accent: #0ea5e9; /* sky-500 */
+  --star-accent-dark: #0284c7; /* sky-600 */
+  --star-bg: #e0f2fe;   /* light azure for light mode */
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --star-bg: #0a2a3a; /* deep teal/navy for dark mode */
+  }
+}
+
+/* STAR section wrapper (add class="star" on the container) */
+.star .toggle-icon { color: var(--star-accent); }
+.star h2, .star h3 { color: var(--star-accent-dark); }
+
+/* Highlight each story heading */
+h3[id^="star-"] {
+  border-left: 4px solid var(--star-accent);
+  padding-left: 10px;
+  margin-top: 18px;
+  scroll-margin-top: 90px; /* avoids sticky header overlap */
+}
+
+/* Optional callout background for STAR content blocks */
+.star .section-content {
+  background: var(--star-bg);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+      
+      
+      
         @media (max-width: 768px) {
             .grid-container {
                 grid-template-columns: 1fr;
@@ -1199,6 +1234,13 @@ body.dark, :root.dark {
                 <li><a href="#star-ethics" class="toc-link">Be a diligent, respectful, and caring steward: Ethical Decision Under Pressure</a></li>
                 <li><a href="#star-conflict" class="toc-link">Create a collaborative project team environment: Team Conflict Resolution</a></li>
                 <li><a href="#star-focus" class="toc-link">Focus on value: Realigning to Value</a></li>
+
+<li><a href="#star-time">Time management and milestone achievement</a></li>
+<li><a href="#star-team">Team collaboration and communication strategies</a></li>
+<li><a href="#star-ethics">Ethical Decision Under Pressure</a></li>
+<li><a href="#star-conflict">Team Conflict Resolution</a></li>
+<li><a href="#star-focus">Focus on value: Realigning to Value</a></li>
+              
             </ul>
         </aside>
 
@@ -2306,15 +2348,13 @@ body.dark, :root.dark {
           
 
 
+<section class="section star">
+  <!-- your STAR Stories content -->
+<h2>STAR Stories</h2>
+<span class="toggle-icon">▼</span>
 
-            <section class="section" id="star-overview">
-              <section id="star-stories" class="star-section">
-                <div class="section-header" onclick="toggleSection(this)">
-                    <h2>STAR Stories</h2>
-                    <span class="toggle-icon">▼</span>
-                </div>
-            <article class="story">
-              <h3 id="star-focus">Focus on value: Realigning to Value</h3>
+<!-- Story 1 -->
+<h3 id="star-time">Time management and milestone achievement</h3>
                     <p><strong>Situation: </strong>During my junior year in college, I worked with my team of three students in developing a simple mobile app interface for a coffee shop. The goal was to help customers browse the menu, place orders, and see daily specials more easily.</p>
                     <br>
                     <p><strong>Task: </strong>Halfway through the project, I noticed that our focus was shifting. We started adding features like loyalty points and push notifications, which are things the cafe did not need at the time. The development time was increasing, and we needed to finish making the ordering experience simple and efficient for customers.</p> 
@@ -2322,9 +2362,18 @@ body.dark, :root.dark {
                     <p><strong>Action: </strong>I initiated a quick feedback session to review what was needed. Making the app simple and easy to use was what mattered the most, so we re-prioritized our application by removing extra features and improving the menu navigation, load times, and visual design. We also had short weekly check-ins to ensure things were progressing on track.</p>
                     <br>  
                     <p><strong>Result: </strong>We finished the app on schedule. The app was simple, functional, and exactly what was needed for a new coffee shop. The experience taught me the importance of continuously checking in with my team members on project progress.</p>
-                </article>
-            </section>
-        </div>
+<!-- Story 2 -->
+<h3 id="star-team">Team collaboration and communication strategies</h3>
+
+<!-- Story 3 -->
+<h3 id="star-ethics">Be a diligent, respectful, and caring steward: Ethical Decision Under Pressure</h3>
+
+<!-- Story 4 -->
+<h3 id="star-conflict">Create a collaborative project team environment: Team Conflict Resolution</h3>
+
+<!-- Story 5 -->
+<h3 id="star-focus">Focus on value: Realigning to Value</h3>
+</section>
 
 
     <script>
@@ -2511,6 +2560,42 @@ body.dark, :root.dark {
         }
     </script>
 
+          <!-- STAR stories --->
+<script>
+(function () {
+  const OFFSET = 80; // adjust for your sticky header height
+
+  function expandContainingSection(node) {
+    // If you use a custom collapse via class names:
+    const section = node.closest('.section');
+    if (section) section.classList.remove('collapsed');
+
+    // If you use <details> in some places:
+    const details = node.closest('details');
+    if (details) details.open = true;
+  }
+
+  function revealFromHash() {
+    const id = decodeURIComponent(location.hash.slice(1));
+    if (!id) return;
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    expandContainingSection(el);
+    const y = el.getBoundingClientRect().top + window.pageYOffset - OFFSET;
+    requestAnimationFrame(() => window.scrollTo({ top: y, behavior: 'smooth' }));
+  }
+
+  window.addEventListener('hashchange', revealFromHash);
+  window.addEventListener('DOMContentLoaded', revealFromHash);
+})();
+</script>
+
+.section.open .toggle-icon { transform: rotate(180deg); transition: transform .2s ease; }
+
+
+
+          
 
 </body></html>
 
