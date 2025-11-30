@@ -770,32 +770,44 @@
             color: #93B5E1;
         }
 
-        .star-section {
-            width: 100%;
-            height: calc(100vh - 4rem);
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
-        }
+/* Light theme tokens for STAR */
+:root {
+  --star-accent: #0ea5e9;   /* sky-500 */
+  --star-accent-600: #0284c7; /* sky-600 */
+  --star-bg: #f0f9ff;       /* sky-50 */
+  --star-border: #dbeafe;   /* blue-100 */
+}
 
-        .star-section {
-            display: inline-block;
-            background: #93B5E1;
-            color: #1a1a1a;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            margin: 1rem 0;
-            transition: all 0.3s ease;
-        }
+/* Dark theme override (if you support dark mode) */
+body.dark, :root.dark {
+  --star-accent: #38bdf8;     /* sky-400 */
+  --star-accent-600: #0ea5e9; /* sky-500 */
+  --star-bg: #0a1b2a;         /* deep blue-ish */
+  --star-border: #12324a;
+}
 
-        .star-section:hover {
-            background: #1a1a1a;
-            color: #93B5E1;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
-        }
+/* STAR section styles */
+.star-section > h2 {
+  color: var(--star-accent-600);
+  margin-bottom: .5rem;
+}
+
+.star-section .story {
+  background: var(--star-bg);
+  border: 1px solid var(--star-border);
+  border-left: 4px solid var(--star-accent);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 12px 0;
+}
+
+.star-section .story h3 {
+  margin: 0 0 8px;
+  color: var(--star-accent-600);
+}
+
+/* Make anchor jumps land below sticky headers */
+.star-section h3[id] { scroll-margin-top: 90px; }
 
         @media (max-width: 768px) {
             .grid-container {
@@ -1182,11 +1194,11 @@
 
             </ul>
             <ul class="toc-list" id="toc-star" style="display: none;">
-                <li><a href="#time" class="toc-link">Time management and milestone achievement</a></li>
-                <li><a href="#communication" class="toc-link">Team collaboration and communication strategies</a></li>
-                <li><a href="#steward" class="toc-link">Be a diligent, respectful, and caring steward: Ethical Decision Under Pressure</a></li>
-                <li><a href="#team" class="toc-link">Create a collaborative project team environment: Team Conflict Resolution</a></li>
-                <li><a href="#value" class="toc-link">Focus on value: Realigning to Value</a></li>
+                <li><a href="#star-time" class="toc-link">Time management and milestone achievement</a></li>
+                <li><a href="#star-team" class="toc-link">Team collaboration and communication strategies</a></li>
+                <li><a href="#star-ethics" class="toc-link">Be a diligent, respectful, and caring steward: Ethical Decision Under Pressure</a></li>
+                <li><a href="#star-conflict" class="toc-link">Create a collaborative project team environment: Team Conflict Resolution</a></li>
+                <li><a href="#star-focus" class="toc-link">Focus on value: Realigning to Value</a></li>
             </ul>
         </aside>
 
