@@ -747,7 +747,7 @@
             color: #93B5E1;
         }
 
-        .portfolio-frame {
+        .star-frame {
             width: 100%;
             height: calc(100vh - 4rem);
             border: none;
@@ -755,7 +755,7 @@
             box-shadow: 0 4px 16px rgba(0,0,0,0.1);
         }
 
-        .portfolio-link {
+        .star-link {
             display: inline-block;
             background: #93B5E1;
             color: #1a1a1a;
@@ -767,7 +767,7 @@
             transition: all 0.3s ease;
         }
 
-        .portfolio-link:hover {
+        .star-link:hover {
             background: #1a1a1a;
             color: #93B5E1;
             transform: translateY(-2px);
@@ -1140,9 +1140,7 @@
             <ul class="toc-list" id="toc-interviews" style="display: none;">
                 <li><a href="#interview-overview" class="toc-link">Stakeholder Interview Overview</a></li>
             </ul>
-            <ul class="toc-list" id="toc-portfolio" style="display: none;">
-                <li><a href="#portfolio-view" class="toc-link">View Portfolio</a></li>
-            </ul>
+
             <ul class="toc-list" id="toc-closure" style="display: none;">
                 <li><a href="#overview" class="toc-link">📋 Project Information</a></li>
                 <li><a href="#summary" class="toc-link">📊 Deliverables Summary</a></li>
@@ -1214,7 +1212,7 @@
                 <div class="category-nav">
                     <button class="category-btn" onclick="showCategory('charter')">Project Charter</button>
                     <button class="category-btn active" onclick="showCategory('status')">Status Reports</button>
-                    <button class="category-btn" onclick="showCategory('portfolio')">Portfolio</button>
+
                     <button class="category-btn" onclick="showCategory('closure')">Project Closure</button>
                     <button class="category-btn" onclick="showCategory('star')">STAR Stories</button>
                     <button class="category-btn" onclick="showCategory('interviews')">Stakeholder Interview</button>
@@ -2256,17 +2254,7 @@
             </section>
         </div>
 
-        <div id="portfolio-content" class="category-content">
-            <section class="section" id="portfolio-view">
-                <div class="section-header" onclick="toggleSection(this)">
-                    <h2>Portfolio Website</h2>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                <div class="section-content">
-                    <h3>Portfolio Website content coming soon...</h3>                    
-                </div>
-            </section>
-        </div>
+
 
         <div id="closure-content" class="category-content">
             <section class="section" id="closure-overview">
@@ -2373,7 +2361,7 @@
             const categoryMap = {
                 'charter': 'charter-content',
                 'status': 'status-content',
-                'portfolio': 'portfolio-content',
+
                 'interviews': 'interviews-content',
                 'closure': 'closure-content',
                 'star': 'star-content'
@@ -2382,7 +2370,7 @@
             const tocMap = {
                 'charter': 'toc-charter',
                 'status': 'toc-status',
-                'portfolio': 'toc-portfolio',
+              
                 'interviews': 'toc-interviews',
                 'closure': 'toc-closure',
                 'star': 'toc-star'
@@ -2448,7 +2436,7 @@
             const buttonTexts = {
                 'charter': 'Project Charter',
                 'status': 'Project Status Report',
-                'portfolio': 'Portfolio',
+              
                 'interviews': 'Stakeholder Interview',
                 'closure': 'Project Closure',
                 'star': 'STAR Stories'
